@@ -2,9 +2,13 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import vertexShader from "./shaders/vertexShader";
 import fragmentShader from "./shaders/fragmentShader";
+// gui用に追加
+import * as dat from "lil-gui";
+
+import texture from "./textures/flag-french.jpg";
 
 // デバッグ
-// const gui = new dat.GUI();
+const gui = new dat.GUI();
 
 /**
  * Sizes
@@ -24,6 +28,7 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const flagTexture = textureLoader.load(texture);
 
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
@@ -44,10 +49,32 @@ const material = new THREE.RawShaderMaterial({
   fragmentShader: fragmentShader,
   side: THREE.DoubleSide,
   transparent: true,
+  uniforms: {
+    // uFrequency: { value: 10 },
+    uFrequency: { value: new THREE.Vector2(10, 5) },
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color("pink") },
+    uTexture: { value: flagTexture },
+  },
 });
+
+//デバッグ追加
+gui
+  .add(material.uniforms.uFrequency.value, "x")
+  .min(0)
+  .max(20)
+  .step(0.01)
+  .name("frequencyX");
+gui
+  .add(material.uniforms.uFrequency.value, "y")
+  .min(0)
+  .max(20)
+  .step(0.01)
+  .name("frequencyY");
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
+mesh.scale.y = 2 / 3;
 scene.add(mesh);
 
 window.addEventListener("resize", () => {
@@ -94,6 +121,9 @@ const clock = new THREE.Clock();
 
 const animate = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  //update material
+  material.uniforms.uTime.value = elapsedTime;
 
   // Update controls
   controls.update();

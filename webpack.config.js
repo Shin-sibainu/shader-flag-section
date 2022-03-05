@@ -21,6 +21,14 @@ module.exports = {
         //トランスコンパイラ
         use: "babel-loader",
       },
+      // Images
+      {
+        test: /\.(jpg|png|gif|svg)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/images/[hash][ext]",
+        },
+      },
       {
         //拡張子が.glsl .vert .fragの場合
         test: /\.(glsl|vert|frag)$/,
