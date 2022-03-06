@@ -5,7 +5,7 @@ import fragmentShader from "./shaders/fragmentShader";
 // gui用に追加
 import * as dat from "lil-gui";
 
-import texture from "./textures/flag-french.jpg";
+import texture from "./textures/jp-flag.png";
 
 // デバッグ
 const gui = new dat.GUI();
